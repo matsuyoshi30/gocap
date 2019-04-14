@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net"
 
+	"gocap/packet"
+
 	"github.com/google/gopacket/layers"
 	"github.com/jroimartin/gocui"
 )
@@ -62,5 +64,13 @@ func (l *List) Name() string {
 }
 
 func (l *List) GetPacketList(v *gocui.View) {
-	fmt.Fprintf(v, "Print Packet List")
+	pds := packet.GetPacket()
+
+	for _, pd := range pds {
+		tp := pd.EData.EType
+		src := pd.EData.SrcMAC
+		dst := pd.EData.DstMAC
+		fmt.Fprintf(v, "%s: %s -> %s", tp, src, dst)
+		fmt.Fprintf(v, "\n")
+	}
 }
