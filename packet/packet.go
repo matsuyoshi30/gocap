@@ -47,6 +47,8 @@ type IpData struct {
 }
 
 type TcpData struct {
+	SrcIP      net.IP
+	DstIP      net.IP
 	SrcPort    layers.TCPPort
 	DstPort    layers.TCPPort
 	Seq        uint32
@@ -78,7 +80,7 @@ func GetPacket() []*PacketData {
 		PacketDatas = append(PacketDatas, pd)
 
 		i++
-		if i == 100 {
+		if i == 10 {
 			break
 		}
 	}
@@ -116,7 +118,10 @@ func getPacketInfo(packet gopacket.Packet) *PacketData {
 
 	tcpLayer := packet.Layer(layers.LayerTypeTCP)
 	if tcpLayer != nil {
+		ipData, _ := ipLayer.(*layers.IPv4)
 		tcpData, _ := tcpLayer.(*layers.TCP)
+		pd.TData.SrcIP = ipData.SrcIP
+		pd.TData.DstIP = ipData.DstIP
 		pd.TData.SrcPort = tcpData.SrcPort
 		pd.TData.DstPort = tcpData.DstPort
 		pd.TData.Seq = tcpData.Seq

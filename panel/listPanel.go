@@ -84,19 +84,21 @@ func (l *List) GetPacketList(v *gocui.View) error {
 	pds := packet.GetPacket()
 
 	for _, pd := range pds {
-		tp := pd.EData.EType
-		src := pd.IData.SrcIP
-		dst := pd.IData.DstIP
+		// tp := pd.EData.EType
+		src := pd.TData.SrcIP
+		dst := pd.TData.DstIP
 
-		l.Update(func(g *gocui.Gui) error {
-			v, err := l.View(l.name)
-			if err != nil {
-				return err
-			}
-			fmt.Fprintf(v, "%s: %s -> %s", tp, src, dst)
-			fmt.Fprintf(v, "\n")
-			return nil
-		})
+		if src != nil && dst != nil {
+			l.Update(func(g *gocui.Gui) error {
+				v, err := l.View(l.name)
+				if err != nil {
+					return err
+				}
+				fmt.Fprintf(v, "TCP: %s -> %s", src, dst)
+				fmt.Fprintf(v, "\n")
+				return nil
+			})
+		}
 	}
 
 	return nil
