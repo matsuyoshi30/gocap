@@ -22,6 +22,7 @@ var (
 type PacketData struct {
 	EData EthernetData
 	IData IpData
+	TData TcpData
 }
 
 type EthernetData struct {
@@ -45,12 +46,29 @@ type IpData struct {
 	DstIP      net.IP
 }
 
+type TcpData struct {
+	SrcPort    layers.TCPPort
+	DstPort    layers.TCPPort
+	Seq        uint32
+	Ack        uint32
+	DataOffset uint8
+	Window     uint16
+	Checksum   uint16
+	Urgent     uint16
+}
+
 func GetPacket() []*PacketData {
 	handle, err = pcap.OpenLive(device, snapshot_len, promiscuous, timeout)
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer handle.Close()
 
+	// var filter string = "tcp"
+	// err = handle.SetBPFFilter(filter)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 	packetSource := gopacket.NewPacketSource(handle, handle.LinkType())
 
 	PacketDatas := make([]*PacketData, 0)
@@ -94,6 +112,19 @@ func getPacketInfo(packet gopacket.Packet) *PacketData {
 		pd.IData.Protocol = ipData.Protocol
 		pd.IData.SrcIP = ipData.SrcIP
 		pd.IData.DstIP = ipData.DstIP
+	}
+
+	tcpLayer := packet.Layer(layers.LayerTypeTCP)
+	if tcpLayer != nil {
+		tcpData, _ := tcpLayer.(*layers.TCP)
+		pd.TData.SrcPort = tcpData.SrcPort
+		pd.TData.DstPort = tcpData.DstPort
+		pd.TData.Seq = tcpData.Seq
+		pd.TData.Ack = tcpData.Ack
+		pd.TData.DataOffset = tcpData.DataOffset
+		pd.TData.Window = tcpData.Window
+		pd.TData.Checksum = tcpData.Checksum
+		pd.TData.Urgent = tcpData.Urgent
 	}
 
 	return pd

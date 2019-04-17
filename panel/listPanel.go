@@ -54,7 +54,7 @@ func (l *List) SetView(g *gocui.Gui) error {
 }
 
 func (l *List) Monitoring(stop chan int, g *gocui.Gui, v *gocui.View) {
-	ticker := time.NewTicker(1 * time.Second)
+	ticker := time.NewTicker(10 * time.Millisecond)
 
 LOOP:
 	for {
@@ -85,8 +85,8 @@ func (l *List) GetPacketList(v *gocui.View) error {
 
 	for _, pd := range pds {
 		tp := pd.EData.EType
-		src := pd.EData.SrcMAC
-		dst := pd.EData.DstMAC
+		src := pd.IData.SrcIP
+		dst := pd.IData.DstIP
 
 		l.Update(func(g *gocui.Gui) error {
 			v, err := l.View(l.name)
