@@ -3,6 +3,7 @@ package panel
 import (
 	"fmt"
 	"net"
+	"strings"
 	"time"
 
 	"gocap/packet"
@@ -35,7 +36,7 @@ func (l *List) SetView(g *gocui.Gui) error {
 		v.Frame = true
 		v.Title = v.Name()
 
-		fmt.Fprintf(v, "Print Packet List Header")
+		fmt.Fprintf(v, "%-8s  %-21s      %-21s", "Protocol", "Src Address", "Dst Address")
 	}
 
 	v, err := g.SetView(l.Name(), l.x, l.y+1, l.w, l.h)
@@ -85,16 +86,21 @@ func (l *List) GetPacketList(v *gocui.View) error {
 
 	for _, pd := range pds {
 		// tp := pd.EData.EType
-		src := pd.TData.SrcIP
-		dst := pd.TData.DstIP
+		srcip := pd.TData.SrcIP
+		srcport := strings.Split(pd.TData.SrcPort.String(), "(")[0]
+		src := srcip.String() + ":" + srcport
 
-		if src != nil && dst != nil {
+		dstip := pd.TData.DstIP
+		dstport := strings.Split(pd.TData.DstPort.String(), "(")[0]
+		dst := dstip.String() + ":" + dstport
+
+		if srcip != nil && dstip != nil {
 			l.Update(func(g *gocui.Gui) error {
 				v, err := l.View(l.name)
 				if err != nil {
 					return err
 				}
-				fmt.Fprintf(v, "TCP: %s -> %s", src, dst)
+				fmt.Fprintf(v, "%-8s  %-21s  %s  %-21s", "TCP", src, ">>", dst)
 				fmt.Fprintf(v, "\n")
 				return nil
 			})
