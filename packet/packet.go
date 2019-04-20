@@ -23,6 +23,7 @@ type PacketData struct {
 	EData EthernetData
 	IData IpData
 	TData TcpData
+	TS    time.Time
 }
 
 type EthernetData struct {
@@ -80,7 +81,7 @@ func GetPacket() []*PacketData {
 		PacketDatas = append(PacketDatas, pd)
 
 		i++
-		if i == 10 {
+		if i == 5 {
 			break
 		}
 	}
@@ -90,6 +91,7 @@ func GetPacket() []*PacketData {
 
 func getPacketInfo(packet gopacket.Packet) *PacketData {
 	pd := &PacketData{}
+	pd.TS = packet.Metadata().Timestamp
 
 	ethernetLayer := packet.Layer(layers.LayerTypeEthernet)
 	if ethernetLayer != nil {
