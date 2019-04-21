@@ -21,7 +21,7 @@ func (n *Navigate) SetView(g *gocui.Gui) error {
 		v.Wrap = true
 		v.Frame = false
 		v.FgColor = gocui.ColorYellow
-		fmt.Fprintf(v, "%s\n", "Stop: Ctrl + Q")
+		fmt.Fprintf(v, "[QUIT] %s [CURSOR] %s / %s", "Ctrl+q", "UP: Ctrl+p", "DOWN: Ctrl+n")
 	}
 
 	return nil

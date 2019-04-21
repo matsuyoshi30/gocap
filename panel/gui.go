@@ -145,7 +145,13 @@ func SetCurrentPanel(g *gocui.Gui, name string) (*gocui.View, error) {
 }
 
 func (g *Gui) SetKeybindingsToPanel(panel string) {
+	if err := g.SetKeybinding(panel, gocui.KeyCtrlN, gocui.ModNone, CursorDown); err != nil {
+		panic(err)
+	}
 	if err := g.SetKeybinding(panel, gocui.KeyArrowDown, gocui.ModNone, CursorDown); err != nil {
+		panic(err)
+	}
+	if err := g.SetKeybinding(panel, gocui.KeyCtrlP, gocui.ModNone, CursorUp); err != nil {
 		panic(err)
 	}
 	if err := g.SetKeybinding(panel, gocui.KeyArrowUp, gocui.ModNone, CursorUp); err != nil {
