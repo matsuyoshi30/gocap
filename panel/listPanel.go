@@ -52,8 +52,11 @@ func (l *List) SetView(g *gocui.Gui) error {
 		v.SelBgColor = gocui.ColorWhite
 		v.SelFgColor = gocui.AttrBold | gocui.ColorBlack
 
-		go l.Monitoring(l.stop, l.Gui.Gui, v)
+		v.SetOrigin(0, 0)
+		v.SetCursor(0, 0)
 	}
+	l.SetKeyBindings()
+	go l.Monitoring(l.stop, l.Gui.Gui, v)
 
 	return nil
 }
@@ -73,11 +76,17 @@ LOOP:
 	}
 }
 
+func (l *List) CloseView() {
+	l.stop <- 0
+	close(l.stop)
+}
+
 func NewList(gui *Gui, name string, x, y, w, h int) *List {
 	return &List{
 		Gui:      gui,
 		name:     name,
 		Position: Position{x, y, w, h},
+		stop:     make(chan int, 1),
 	}
 }
 
@@ -114,4 +123,8 @@ func (l *List) GetPacketList(v *gocui.View) error {
 	}
 
 	return nil
+}
+
+func (l *List) SetKeyBindings() {
+	l.SetKeybindingsToPanel(l.name)
 }
