@@ -34,6 +34,7 @@ func (l *List) SetView(g *gocui.Gui) error {
 
 		v.Wrap = true
 		v.Frame = true
+		v.FgColor = gocui.AttrBold | gocui.ColorWhite
 		v.Title = v.Name()
 
 		fmt.Fprintf(v, "%-8s  %-21s    %-21s %-20s", "Protocol", "Src Address", "Dst Address", "Timestamp")
@@ -47,6 +48,9 @@ func (l *List) SetView(g *gocui.Gui) error {
 
 		v.Wrap = true
 		v.Frame = false
+		v.FgColor = gocui.ColorMagenta
+		v.SelBgColor = gocui.ColorWhite
+		v.SelFgColor = gocui.AttrBold | gocui.ColorBlack
 
 		go l.Monitoring(l.stop, l.Gui.Gui, v)
 	}

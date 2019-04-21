@@ -11,6 +11,7 @@ const (
 	ListPanel       = "Packet List scroll"
 	DetailPanel     = "Detail scroll"
 	DataPanel       = "Data scroll"
+	NavigatePanel   = "Navigate"
 )
 
 type Gui struct {
@@ -50,9 +51,10 @@ func New(mode gocui.OutputMode) *Gui {
 func (gui *Gui) init() {
 	maxX, maxY := gui.Size()
 
-	gui.storePanel(NewList(gui, ListPanel, 0, 0, maxX/2-1, maxY-1))
+	gui.storePanel(NewList(gui, ListPanel, 0, 0, maxX/2-1, maxY-1-3))
 	gui.storePanel(NewDetail(gui, DetailPanel, maxX/2, 0, maxX-1, maxY/2-1))
-	gui.storePanel(NewData(gui, DataPanel, maxX/2, maxY/2, maxX-1, maxY-1))
+	gui.storePanel(NewData(gui, DataPanel, maxX/2, maxY/2, maxX-1, maxY-1-3))
+	gui.storePanel(NewNavigate(gui, NavigatePanel, 0, maxY-1-3, maxX-1, maxY-1))
 
 	for _, panel := range gui.Panels {
 		if err := panel.SetView(gui.Gui); err != nil {
@@ -70,9 +72,10 @@ func (gui *Gui) storePanel(panel Panel) {
 	gui.Panels[panel.Name()] = panel
 
 	storeTarget := map[string]bool{
-		ListPanel:   true,
-		DetailPanel: true,
-		DataPanel:   true,
+		ListPanel:     true,
+		DetailPanel:   true,
+		DataPanel:     true,
+		NavigatePanel: true,
 	}
 
 	if storeTarget[panel.Name()] {

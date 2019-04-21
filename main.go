@@ -9,10 +9,12 @@ import (
 
 func main() {
 	g := panel.New(gocui.Output256)
+	defer g.Close()
 
-	if err := g.SetKeybinding("", gocui.KeyCtrlC, gocui.ModNone, quit); err != nil {
-		log.Panicln(err)
+	if err := g.SetKeybinding("", gocui.KeyCtrlQ, gocui.ModNone, quit); err != nil {
+		panic(err)
 	}
+
 	if err := g.MainLoop(); err != nil && err != gocui.ErrQuit {
 		log.Panicln(err)
 	}
