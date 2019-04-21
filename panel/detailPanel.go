@@ -5,6 +5,8 @@ import (
 	"net"
 	"time"
 
+	"gocap/packet"
+
 	"github.com/google/gopacket/layers"
 	"github.com/jroimartin/gocui"
 )
@@ -17,28 +19,14 @@ type Detail struct {
 	capturedLength int
 	actualLength   int
 	ethernetInfo   ETHERNETInfo
-	arpInfo        ARPInfo
 	ipInfo         IPInfo
 	tcpInfo        TCPInfo
-	udpInfo        UDPInfo
 }
 
 type ETHERNETInfo struct {
-	etype  string
-	srcMAC string
-	dstMAC string
-}
-
-type ARPInfo struct {
-	addrType        layers.LinkType
-	protocol        layers.EthernetType
-	hwAddressSize   uint8
-	protAddressSize uint8
-	operation       uint16
-	srcHwAddress    string
-	srcProtAddress  string
-	dstHwAddress    string
-	dstProtAddress  string
+	etype  layers.EthernetType
+	srcMAC net.HardwareAddr
+	dstMAC net.HardwareAddr
 }
 
 type IPInfo struct {
@@ -67,12 +55,6 @@ type TCPInfo struct {
 	urgent           uint16
 }
 
-type UDPInfo struct {
-	srcPort, dstPort layers.UDPPort
-	length           uint16
-	checksum         uint16
-}
-
 func (d *Detail) SetView(g *gocui.Gui) error {
 	if v, err := g.SetView("detail", d.x, d.y, d.w, d.h); err != nil {
 		if err != gocui.ErrUnknownView {
@@ -80,10 +62,25 @@ func (d *Detail) SetView(g *gocui.Gui) error {
 		}
 
 		v.Title = "Packet Detail"
-		fmt.Fprintf(v, "Print Packet Detail Information")
+		v.SetOrigin(0, 0)
+		v.SetCursor(0, 0)
 	}
 
 	return nil
+}
+
+func ShowDetail(g *gocui.Gui, pd *packet.PacketData) {
+	g.Update(func(*gocui.Gui) error {
+		v, err := g.View("detail")
+		if err != nil {
+			return err
+		}
+		v.Clear()
+		fmt.Fprintf(v, "%+v\n", pd.TS)
+		fmt.Fprintf(v, "[SRC] %s:%s\n", pd.TData.SrcIP, pd.TData.SrcPort)
+		fmt.Fprintf(v, "[DST] %s:%s\n", pd.TData.DstIP, pd.TData.DstPort)
+		return nil
+	})
 }
 
 func NewDetail(gui *Gui, name string, x, y, w, h int) *Detail {
@@ -96,4 +93,8 @@ func NewDetail(gui *Gui, name string, x, y, w, h int) *Detail {
 
 func (d *Detail) Name() string {
 	return d.name
+}
+
+func (d *Detail) SetKeyBindings() {
+	d.SetKeybindingsToPanel(d.name)
 }
