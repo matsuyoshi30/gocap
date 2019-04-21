@@ -144,6 +144,18 @@ func SetCurrentPanel(g *gocui.Gui, name string) (*gocui.View, error) {
 	return g.SetViewOnTop(name)
 }
 
+func SwitchToListPanel(g *gocui.Gui, v *gocui.View) error {
+	_, err := SetCurrentPanel(g, ListPanel)
+
+	return err
+}
+
+func SwitchToDetailPanel(g *gocui.Gui, v *gocui.View) error {
+	_, err := SetCurrentPanel(g, DetailPanel)
+
+	return err
+}
+
 func (g *Gui) SetKeybindingsToPanel(panel string) {
 	if err := g.SetKeybinding(panel, gocui.KeyCtrlN, gocui.ModNone, CursorDown); err != nil {
 		panic(err)
@@ -155,6 +167,13 @@ func (g *Gui) SetKeybindingsToPanel(panel string) {
 		panic(err)
 	}
 	if err := g.SetKeybinding(panel, gocui.KeyArrowUp, gocui.ModNone, CursorUp); err != nil {
+		panic(err)
+	}
+
+	if err := g.SetKeybinding(panel, 'l', gocui.ModNone, SwitchToListPanel); err != nil {
+		panic(err)
+	}
+	if err := g.SetKeybinding(panel, 'd', gocui.ModNone, SwitchToDetailPanel); err != nil {
 		panic(err)
 	}
 }

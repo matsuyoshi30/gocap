@@ -119,7 +119,9 @@ func (l *List) GetPacketList(v *gocui.View) {
 
 func (l *List) DetailInfo(g *gocui.Gui, v *gocui.View) error {
 	pac := l.selected()
-	ShowDetail(g, pac)
+	if pac != nil {
+		ShowDetail(g, pac)
+	}
 
 	return nil
 }
