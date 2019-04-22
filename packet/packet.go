@@ -24,6 +24,8 @@ type PacketData struct {
 	IData IpData
 	TData TcpData
 	TS    time.Time
+
+	Data []byte
 }
 
 type EthernetData struct {
@@ -67,11 +69,6 @@ func GetPacket() []*PacketData {
 	}
 	defer handle.Close()
 
-	// var filter string = "tcp"
-	// err = handle.SetBPFFilter(filter)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
 	packetSource := gopacket.NewPacketSource(handle, handle.LinkType())
 
 	PacketDatas := make([]*PacketData, 0)
@@ -133,6 +130,8 @@ func getPacketInfo(packet gopacket.Packet) *PacketData {
 		pd.TData.Checksum = tcpData.Checksum
 		pd.TData.Urgent = tcpData.Urgent
 	}
+
+	pd.Data = packet.Data()
 
 	return pd
 }
