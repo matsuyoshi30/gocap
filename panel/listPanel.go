@@ -126,10 +126,22 @@ func (l *List) DetailInfo(g *gocui.Gui, v *gocui.View) error {
 	return nil
 }
 
+func (l *List) DataInfo(g *gocui.Gui, v *gocui.View) error {
+	pac := l.selected()
+	if pac != nil {
+		ShowData(g, pac)
+	}
+
+	return nil
+}
+
 func (l *List) SetKeyBindings() {
 	l.SetKeybindingsToPanel(l.name)
 
 	if err := l.SetKeybinding(l.name, 'o', gocui.ModNone, l.DetailInfo); err != nil {
+		panic(err)
+	}
+	if err := l.SetKeybinding(l.name, 'o', gocui.ModNone, l.DataInfo); err != nil {
 		panic(err)
 	}
 }
