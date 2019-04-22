@@ -156,6 +156,12 @@ func SwitchToDetailPanel(g *gocui.Gui, v *gocui.View) error {
 	return err
 }
 
+func SwitchToDataPanel(g *gocui.Gui, v *gocui.View) error {
+	_, err := SetCurrentPanel(g, DataPanel)
+
+	return err
+}
+
 func (g *Gui) SetKeybindingsToPanel(panel string) {
 	if err := g.SetKeybinding(panel, gocui.KeyCtrlN, gocui.ModNone, CursorDown); err != nil {
 		panic(err)
@@ -174,6 +180,9 @@ func (g *Gui) SetKeybindingsToPanel(panel string) {
 		panic(err)
 	}
 	if err := g.SetKeybinding(panel, 'd', gocui.ModNone, SwitchToDetailPanel); err != nil {
+		panic(err)
+	}
+	if err := g.SetKeybinding(panel, 't', gocui.ModNone, SwitchToDataPanel); err != nil {
 		panic(err)
 	}
 }

@@ -23,7 +23,7 @@ func (n *Navigate) SetView(g *gocui.Gui) error {
 		v.FgColor = gocui.ColorYellow
 		fmt.Fprintf(v, "[QUIT] %s [CURSOR] %s / %s", "Ctrl+'q'", "UP: Ctrl+'p'", "DOWN: Ctrl+'n'\n")
 		fmt.Fprintf(v, "[SHOW DETAIL] %s ", "'o'")
-		fmt.Fprintf(v, "[SWITCH PANEL] to list %s / to detail %s", "'l'", "'d'")
+		fmt.Fprintf(v, "[SWITCH PANEL] to List %s / to Detail %s / to Data %s", "'l'", "'d'", "'t'")
 	}
 
 	return nil
