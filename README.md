@@ -2,15 +2,18 @@
 
 ### Requirement
 
-- Go (Ver.1.12)
+- Go (Ver.1.11)
 
 ### Usage
 
+Set ```GO111MODULE=on``` , and run that.
+
 ```
 $ go get github.com/matsuyoshi30/gocap
-
-$ cd $GOPATH/src/github.com/matsuyoshi30/gocap
-
-$ go run main.go
 ```
 
+Then add ```~/go/bin``` to your ```PATH```.
+
+```
+$ gocap
+```
